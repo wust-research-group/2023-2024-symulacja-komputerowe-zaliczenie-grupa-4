@@ -2,28 +2,52 @@
 
 Wydział Matematyki, Semestr Letni 2023/2024
 
-**Laboratorium 6:** Niejednorodny proces Poissona
+**Laboratorium:** Zaliczenie
 
-**Termin oddania:** 16/05/2024 godz. 23:59:59 CET.
+**Termin oddania:** 20/06/2024. max 60 minut
 
 ---
+**Zadanie 1.** Generator "tuzin"
 
-**Zadanie 1.** Metoda przerzedzania 
-> Napisz algorytm, który dla ustalonej niejednorodnej funkcji intensywności $\lambda(t)$ generuje czasy oczekiwania niejednorodnego procesu Poissona metodą przerzedzania.
-> - Sprawdź poprawność jego działania weryfikując, że $N_t \sim Poiss(\int_{0}^{t}\lambda{(s)}\mbox{ds})$
+Niech $U_1, U_2, \ldots , U_{12}$ będą liczbami pseudolosowymi $\mathcal{U}(0,1)$. Metoda tuzina generująca liczbę pseudolosową $Y \sim \mathcal{N}(m, s)$ jest opisana za pomocą algorytmu:
+1. $S=\sum\limits_{i=1}^{12}U_i$,
+2. $X=S-6$,
+3. $Y = sX + m$.
 
-**Zadanie 2.** Metoda odwrotnej dystrybuanty
-> Dla przypadków, w których możemy łatwo wyznaczać $m(t) =\int_{0}^{t}\lambda{(s)}\mbox{ds}$ można użyć alternatywnego algorytmu.
-> 1. Dla ustalonego $T$ wygenerować zmienną $N_t \sim Poiss(m(T))$.
-> 1. Za czasy oczekiwania wziąć $N_t$ posortowanych zmiennych o dystrybuancie $F(t) = m(t)/m(T)$.
-> - Sprawdź również jego działanie.
+Niech $m$ oznacza resztę z dzielenia ostatniej cyfry Twojego indeksu przez liczbę 2 (operacja modulo 2), a następnie przeprowadź analizę poprawności implementacja (bez wykorzystania pętli `for`/`while`) ww. generatora generując $N > 1000$ realizacji dla rozkladu $\mathcal{N}(m, 1)$ w oparciu o
+- histogram vs. gęstość teoretyczną,
+- dystrybuantę empiryczną vs. dystrybuantę teoretyczną,
+- wykres kwantylowy (QQ-plot).
 
-**Zadanie 3.** Łączenie procesów Poissona
-> Mając 2 niezależne niejednorodne procesy Poissona stwórz proces składający się z połączenia wszystkich zdarzeń obu.
-> - Sprawdź, że jego intensywność jest sumą 2 oryginalnych intensywności.
+Uwaga: Interfejs funkcji
+```python
+def tuzin(N, m, s):
+   ...
+```
 
-**Zadanie 4.** Rozłączenie procesów Poissona
-> Znacznikowanym procesem Poissona nazywamy proces Poissona, w którym każdy jego czas zdarzenia $S_i$ ma dołączony znacznik (etykietę) $Z_i$, które są niezależnymi zmiennymi losowymi.
-> - Sprawdź, że dla znaczników $Z_i \in \{1, 2,\ldots, N\}$ zadanych rozkładem $P(Z_i = k) = p_k(S_i)$ znaniczkowane procesy otrzymane wybieraniem $S_i = k$ to niezależne niejednorodne procesy Poissona o intensywnościach $p_k(t)λ$.
+Założenia implementacji:
+- w przypadku wywołania funkcji w postacji `tuzin(1000)`, domyślne wartości parametrów `m` i `s` zdefiniuj jako $0$ i $1$ odpowiednio,
+- zalecana biblioteka do obliczeń numerycznych [`numpy`](https://numpy.org/), 
+- kod zgodny z [PEP-8](https://peps.python.org/pep-0008/) oraz [black](https://github.com/psf/black) i [isort](https://pycqa.github.io/isort/),
+- pamiętaj o dobrych standardach programistycznych, w szczególności [PEP-3017](https://peps.python.org/pep-3107/).
+
+**Zadanie 2** Proces ryzyka
+
+Kapitał firmy ubezpieczeniowej jest zadany wzorem:
+$$R(t)=r_0 +p(t)−\sum\limits_{i=1}^{N_t}X_i,$$
+gdzie:
+- $A$ oznacza ostatnią cyfrę Twojego indeksu. Jeżeli to $0$, weź $9$.
+- Zakładamy, że firma ubezpieczeniowa ma liniowe przychody $p(t) = ct$, gdzie $c = \frac{A}{3}$
+- Wypłaty odszkodowań obserwujemy jako niejednorodny proces Poissona $N_{t}$, przy czym intensywność $\lambda{(t)}$ jest równa $1 + \sin{(t)}$
+- Wielkość wypłat pochodzi z rozkładu wykładniczego $\exp(A)$.
+- Kapitał początkowy firmy to $r_0 = 2 \cdot A$.
+- Jeden dzień trwa jedną jednostkę czasu
+- Jeśli trafimy w 0, to rozpoczynamy odliczanie paryskiego zegara: jeśli będziemy na minusie dłużej niż 4 dni, przegrywamy.
+- jeśli spadniemy poniżej -10, to automatycznie przegrywamy
+
+Polecenie:
+1. Oszacuj prawdopodobieństwo ruiny w ciągu $5$ lat.
+2. Zbadaj rozkład czasu ruiny pod warunkiem, że nastąpiła przed upływem $5$ lat.
+
 
 **Uwaga**: Rozwiązania poszczególnych zadań należy umieścić w dedykowanych plikach `*.py` lub `*.ipynb` o nazwach `zadanie_1.[py|ipynb]`, `zadanie_2.[py|ipynb]` i `zadanie_3.[py|ipynb]`, itd.
